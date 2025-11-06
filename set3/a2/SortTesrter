@@ -1,0 +1,40 @@
+class SortTester {
+public:
+  static long long TestClassic(const std::vector<int> &data) {
+    auto A = data;
+    auto start = std::chrono::high_resolution_clock::now();
+    MergeSort(A, 0, (int)A.size() - 1);
+    auto elapsed = std::chrono::high_resolution_clock::now() - start;
+    return std::chrono::duration_cast<std::chrono::microseconds>(elapsed)
+        .count();
+  }
+
+  static long long TestHybrid(const std::vector<int> &data, int threshold) {
+    auto A = data;
+    auto start = std::chrono::high_resolution_clock::now();
+    MergeSortWithIsertion(A, 0, (int)A.size() - 1, threshold);
+    auto elapsed = std::chrono::high_resolution_clock::now() - start;
+    return std::chrono::duration_cast<std::chrono::microseconds>(elapsed)
+        .count();
+  }
+
+  static long long MedianOfRunsClassic(const std::vector<int> &data,
+                                       int runs = 7) {
+    std::vector<long long> times;
+    for (int i = 0; i < runs; ++i) {
+      times.push_back(TestClassic(data));
+    }
+
+    std::sort(times.begin(), times.end());
+    return times[runs / 2];
+  }
+  static long long MedianOfRunsHybrid(const std::vector<int> &data,
+                                      int threshold, int runs = 7) {
+    std::vector<long long> times;
+    for (int i = 0; i < runs; ++i) {
+      times.push_back(TestHybrid(data, threshold));
+    }
+    std::sort(times.begin(), times.end());
+    return times[runs / 2];
+  }
+};
