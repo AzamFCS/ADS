@@ -1,0 +1,35 @@
+class ArrayGenerator {
+public:
+  ArrayGenerator(int max_n = 100000, int seed = 42) : gen(seed) {
+    std::uniform_int_distribution<int> dis(0, 6000);
+    rand_max.resize(max_n);
+    for (int i = 0; i < max_n; ++i) {
+      rand_max[i] = dis(gen);
+    }
+    rev_max = rand_max;
+    std::sort(rev_max.begin(), rev_max.end(), std::greater<int>());
+
+    almost_max = rand_max;
+    std::sort(almost_max.begin(), almost_max.end());
+    std::uniform_int_distribution<int> idx(0, max_n - 1);
+    int swaps = max_n / 100;
+    for (int i = 0; i < swaps; ++i) {
+      int a = idx(gen);
+      int b = idx(gen);
+      std::swap(almost_max[a], almost_max[b]);
+    }
+  }
+  std::vector<int> GetRandom(int n) const {
+    return std::vector<int>(rand_max.begin(), rand_max.begin() + n);
+  }
+  std::vector<int> GetReversed(int n) const {
+    return std::vector<int>(rev_max.begin(), rev_max.begin() + n);
+  }
+  std::vector<int> GetAlmost(int n) const {
+    return std::vector<int>(almost_max.begin(), almost_max.begin() + n);
+  }
+
+private:
+  mutable std::mt19937 gen;
+  std::vector<int> rand_max, rev_max, almost_max;
+};
